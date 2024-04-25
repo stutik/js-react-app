@@ -1,25 +1,46 @@
 import { useState } from "react";
 
 export default function TodoList() {
-  const [task, setTask] = useState("");
   const [item, setItem] = useState([]);
-
-  const itemList = (e) => {
+  const [task, setTask] = useState("");
+  const onChangeTask = (e) => {
     setTask(e.target.value);
   };
   const addItem = () => {
-    setItem([...item, task]);
+    if (task !== "") {
+      setItem([...item, task]);
+      setTask("");
+    }
   };
+  const deleteButton = (index) => {
+    console.log("delete button");
+    const copyItem = item.slice();
+    copyItem.splice(index, 1);
+    setItem([...copyItem]);
+  };
+
   return (
     <div className="todoList">
-      <h1>Todo List</h1>
-      <input onChange={itemList} type="text" placeholder="Add Task" />
+      <h1>TodoList</h1>
+      <input
+        type="text"
+        placeholder="Add Task"
+        value={task}
+        onChange={onChangeTask}
+      />
       <button onClick={addItem}>Add Item</button>
       <ul>
-        {item.map((i) => {
+        {item.map((i, index) => {
           return (
-            <li>
-              <input type="checkbox" /> {i}
+            <li key={index}>
+              {i}{" "}
+              <button
+                onClick={() => {
+                  deleteButton(index);
+                }}
+              >
+                x
+              </button>
             </li>
           );
         })}
