@@ -6,3 +6,13 @@
   text-align: center;
   border-radius: 5px;
 }
+ol {
+  width: 200px;
+  margin: 40px auto;
+}
+li {
+  margin: 10px;
+}
+li button {
+  margin-left: 15px;
+}

@@ -13,7 +13,6 @@ export default function TodoList() {
     }
   };
   const deleteButton = (index) => {
-    console.log("delete button");
     const copyItem = item.slice();
     copyItem.splice(index, 1);
     setItem([...copyItem]);
@@ -33,7 +32,7 @@ export default function TodoList() {
         {item.map((i, index) => {
           return (
             <li key={index}>
-              {i}{" "}
+              {i}
               <button
                 onClick={() => {
                   deleteButton(index);
