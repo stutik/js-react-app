@@ -1,44 +1,51 @@
 import { useState } from "react";
 
-export default function TodoList() {
-  const [item, setItem] = useState([]);
-  const [task, setTask] = useState("");
-  const onChangeTask = (e) => {
-    setTask(e.target.value);
+const TodoList = () => {
+  const [todoItem, setTodoItem] = useState([]);
+  const [todoUpdate, setTodoUpdate] = useState();
+
+  const todoInputValue = (e) => {
+    setTodoUpdate(e.target.value);
   };
-  const addItem = () => {
-    if (task !== "") {
-      setItem([...item, task]);
-      setTask("");
+  const addTodoButton = () => {
+    if (!todoUpdate == "") {
+      setTodoItem([...todoItem, { name: todoUpdate, isCompleted: false }]);
+      setTodoUpdate("");
     }
   };
-  const deleteButton = (index) => {
-    const copyItem = item.slice();
-    copyItem.splice(index, 1);
-    setItem([...copyItem]);
+  const deleteTodoTask = (index) => {
+    const copyTaskUpdate = todoItem.slice();
+    copyTaskUpdate.splice(index, 1);
+    setTodoItem([...copyTaskUpdate]);
   };
-
+  const taskCompleted = (e, index) => {
+    const copyTaskUpdate = todoItem.slice();
+    copyTaskUpdate[index].isCompleted = e.target.checked;
+    setTodoUpdate([...copyTaskUpdate]);
+  };
   return (
     <div className="todoList">
       <h1>TodoList</h1>
-      <input
-        type="text"
-        placeholder="Add Task"
-        value={task}
-        onChange={onChangeTask}
-      />
-      <button onClick={addItem}>Add Item</button>
+      <input type="text" value={todoUpdate} onChange={todoInputValue} />
+      <button onClick={addTodoButton}>Add Todo</button>
       <ul>
-        {item.map((i, index) => {
+        {todoItem.map((todo, index) => {
           return (
             <li key={index}>
-              {i}
+              <input
+                type="checkbox"
+                onChange={(e) => {
+                  taskCompleted(e, index);
+                }}
+                checked={todo.isCompleted}
+              />
+              {todo.name}
               <button
                 onClick={() => {
-                  deleteButton(index);
+                  deleteTodoTask(index);
                 }}
               >
-                x
+                Delete task
               </button>
             </li>
           );
@@ -46,4 +53,6 @@ export default function TodoList() {
       </ul>
     </div>
   );
-}
+};
+
+export default TodoList;

@@ -1,7 +1,7 @@
 import { useState } from "react";
 
 export default function ShoppingList() {
-  const [itemValue, setItemValue] = useState(["bread", "milk"]);
+  const [itemValue, setItemValue] = useState([]);
   const [taskUpdate, setTaskUpdate] = useState("");
   //const itemValue = ["bread", "milk"];
   const onValueChange = (e) => {
@@ -9,10 +9,17 @@ export default function ShoppingList() {
   };
   const onAddList = () => {
     if (!taskUpdate == "") {
-      setItemValue([...itemValue, taskUpdate]);
+      setItemValue([...itemValue, { name: taskUpdate, isCompleted: false }]);
       setTaskUpdate("");
     }
   };
+
+  const taskCompleted = (e, index) => {
+    const copyTaskUpdate = itemValue.slice();
+    copyTaskUpdate[index].isCompleted = e.target.checked;
+    setTaskUpdate([...copyTaskUpdate]);
+  };
+
   const onDeleteItem = (index) => {
     const copyTaskUpdate = itemValue.slice();
     copyTaskUpdate.splice(index, 1);
@@ -33,7 +40,14 @@ export default function ShoppingList() {
         {itemValue.map((i, index) => {
           return (
             <li key={index}>
-              {i}
+              <input
+                type="checkbox"
+                checked={i.isCompleted}
+                onChange={(e) => {
+                  taskCompleted(e, index);
+                }}
+              />
+              {i.name}
               <button
                 onClick={() => {
                   onDeleteItem(index);
