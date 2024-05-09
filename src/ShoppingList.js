@@ -1,64 +1,67 @@
 import { useState } from "react";
 
-export default function ShoppingList() {
-  const [itemValue, setItemValue] = useState([]);
-  const [taskUpdate, setTaskUpdate] = useState("");
-  //const itemValue = ["bread", "milk"];
-  const onValueChange = (e) => {
-    setTaskUpdate(e.target.value);
+const ShoppingList = () => {
+  const [item, setItem] = useState([]);
+  const [task, setTask] = useState();
+
+  const ValueOnChange = (e) => {
+    setTask(e.target.value);
   };
-  const onAddList = () => {
-    if (!taskUpdate == "") {
-      setItemValue([...itemValue, { name: taskUpdate, isCompleted: false }]);
-      setTaskUpdate("");
+  const onClickAdd = () => {
+    if (!task === "") {
+      setItem([
+        ...item,
+        { name: task, isCompleted: false, createdAt: new Date().getTime() },
+      ]);
+      setTask("");
     }
   };
-
-  const taskCompleted = (e, index) => {
-    const copyTaskUpdate = itemValue.slice();
-    copyTaskUpdate[index].isCompleted = e.target.checked;
-    setTaskUpdate([...copyTaskUpdate]);
-  };
-
-  const onDeleteItem = (index) => {
-    const copyTaskUpdate = itemValue.slice();
+  const onDeleteTask = (index) => {
+    const copyTaskUpdate = item.slice();
     copyTaskUpdate.splice(index, 1);
-    setItemValue([...copyTaskUpdate]);
+    setItem([...copyTaskUpdate]);
   };
-
+  const checkOnChange = (e, index) => {
+    const copyTaskUpdate = item.slice();
+    copyTaskUpdate[index].isCompleted = e.target.checked;
+    setItem([...copyTaskUpdate]);
+  };
   return (
     <div className="todoList">
       <h1>Shopping List</h1>
       <input
         type="text"
-        onChange={onValueChange}
-        value={taskUpdate}
-        placeholder="Add Shopping List"
+        onChange={ValueOnChange}
+        value={task}
+        placeholder="Add task"
       />
-      <button onClick={onAddList}>Add List</button>
+      <button onClick={onClickAdd}>Add</button>
       <ul>
-        {itemValue.map((i, index) => {
+        {item.map((i, index) => {
           return (
             <li key={index}>
               <input
                 type="checkbox"
                 checked={i.isCompleted}
                 onChange={(e) => {
-                  taskCompleted(e, index);
+                  checkOnChange(e, index);
                 }}
               />
               {i.name}
               <button
                 onClick={() => {
-                  onDeleteItem(index);
+                  onDeleteTask(index);
                 }}
               >
                 delete
               </button>
+              <em>{new Date(i.createdAt).toLocaleString()}</em>
             </li>
           );
         })}
       </ul>
+      <pre>{JSON.stringify(item, null, 2)}</pre>
     </div>
   );
-}
+};
+export default ShoppingList;

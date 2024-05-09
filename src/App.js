@@ -1,12 +1,13 @@
-import TodoList from "./TodoList";
+//import TodoList from "./TodoList";
 //import Practice from "./Practice";
-//import ShoppingList from "./ShoppingList";
+import ShoppingList from "./ShoppingList";
 //import Family from "./Family";
 import "./App.css";
 //import Member from "./Member";
 
 export default function App() {
   //return <Practice />;
-  return <TodoList />;
+  //return <TodoList />;
+  return <ShoppingList />;
   //return <Member />;
 }

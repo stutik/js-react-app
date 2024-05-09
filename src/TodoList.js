@@ -1,16 +1,28 @@
 import { useState } from "react";
 
+/*
+"tesk 1"
+[
+  "Task1"(x)
+  
+]
+*/
+
 const TodoList = () => {
   const [todoItem, setTodoItem] = useState([]);
-  const [todoUpdate, setTodoUpdate] = useState();
+  const [text, setText] = useState(); //text = "some value"
 
-  const todoInputValue = (e) => {
-    setTodoUpdate(e.target.value);
+  const onTextChange = (e) => {
+    setText(e.target.value);
   };
   const addTodoButton = () => {
-    if (!todoUpdate == "") {
-      setTodoItem([...todoItem, { name: todoUpdate, isCompleted: false }]);
-      setTodoUpdate("");
+    if (!text === "") {
+      setTodoItem([
+        ...todoItem,
+        { name: text, isCompleted: false, createdAt: new Date().getTime() },
+      ]);
+
+      setText("");
     }
   };
   const deleteTodoTask = (index) => {
@@ -21,12 +33,12 @@ const TodoList = () => {
   const taskCompleted = (e, index) => {
     const copyTaskUpdate = todoItem.slice();
     copyTaskUpdate[index].isCompleted = e.target.checked;
-    setTodoUpdate([...copyTaskUpdate]);
+    setTodoItem([...copyTaskUpdate]);
   };
   return (
     <div className="todoList">
       <h1>TodoList</h1>
-      <input type="text" value={todoUpdate} onChange={todoInputValue} />
+      <input type="text" value={text} onChange={onTextChange} />
       <button onClick={addTodoButton}>Add Todo</button>
       <ul>
         {todoItem.map((todo, index) => {
@@ -47,10 +59,13 @@ const TodoList = () => {
               >
                 Delete task
               </button>
+              {new Date(todo.createdAt).toLocaleString()}
             </li>
           );
         })}
       </ul>
+
+      {/* <pre>{JSON.stringify(todoItem, null, 2)}</pre> */}
     </div>
   );
 };
