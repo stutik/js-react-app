@@ -42,10 +42,10 @@ const ShoppingList = () => {
             <li key={index}>
               <input
                 type="checkbox"
-                checked={i.isCompleted}
                 onChange={(e) => {
                   checkOnChange(e, index);
                 }}
+                checked={i.isCompleted}
               />
               {i.name}
               <button

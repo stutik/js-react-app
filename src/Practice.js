@@ -1,66 +1,67 @@
 import { useState } from "react";
 
-export default function Practice() {
-  const [taskList, setTaskList] = useState([]); //['task1', 'task2'] -> [{},{},{}]
-  const [taskUpdate, setTaskUpdate] = useState("");
-
-  const TaskValue = (e) => {
-    setTaskUpdate(e.target.value);
+const Practice = () => {
+  const [item, setItem] = useState([]);
+  const [task, setTask] = useState();
+  const typeTask = (e) => {
+    setTask(e.target.value);
   };
-  const AddTaskButton = () => {
-    if (!taskUpdate == "") {
-      setTaskList([...taskList, { name: taskUpdate, isCompleted: false }]);
-      //[...prev, 'task1',] -> [...prev,{name:'task', isCompleted: false}]
-      setTaskUpdate("");
+  const addTask = () => {
+    if (!task == "") {
+      setItem([
+        ...item,
+        { name: task, isCompleted: false, createdAt: new Date().getTime() },
+      ]);
+      setTask("");
     }
   };
-  const DeleteTask = (index) => {
-    const copyTaskUpdate = taskList.slice();
+  const onDeleteTask = (index) => {
+    const copyTaskUpdate = item.slice();
     copyTaskUpdate.splice(index, 1);
-    setTaskList([...copyTaskUpdate]);
+    setItem([...copyTaskUpdate]);
   };
-
-  const onTaskCompleted = (e, index) => {
-    const copyTaskUpdate = taskList.slice();
+  const taskCompleted = (e, index) => {
+    const copyTaskUpdate = item.slice();
     copyTaskUpdate[index].isCompleted = e.target.checked;
-
-    setTaskList([...copyTaskUpdate]);
+    setItem([...copyTaskUpdate]);
   };
   return (
     <div className="todoList">
-      <h1>Todo Task</h1>
-
+      <h1>todo task</h1>
       <input
         type="text"
-        onChange={TaskValue}
-        placeholder="Add Todo task"
-        value={taskUpdate}
+        placeholder="Add task"
+        value={task}
+        onChange={typeTask}
       />
-      <button onClick={AddTaskButton}>Add Task</button>
-      <ol>
-        {taskList.map((i, index) => {
+      <button onClick={addTask}>Add</button>
+      <ul>
+        {item.map((i, index) => {
           return (
             <li key={index}>
               <input
-                onChange={(e) => {
-                  onTaskCompleted(e, index);
-                }}
-                checked={i.isCompleted} //incase of checked or unchecked
                 type="checkbox"
+                onChange={(e) => {
+                  taskCompleted(e, index);
+                }}
+                checked={i.isCompleted}
               />
               {i.name}
               <button
                 onClick={() => {
-                  DeleteTask(index);
+                  onDeleteTask(index);
                 }}
               >
-                Delete
+                Delete task
               </button>
+              {new Date(i.createdAt).toLocaleString()};
             </li>
           );
         })}
-      </ol>
-      {/* <pre>{JSON.stringify(taskList, null, 2)}</pre> */}
+      </ul>
+      <pre>{JSON.stringify(item, null, 2)}</pre>
     </div>
   );
-}
+};
+
+export default Practice;

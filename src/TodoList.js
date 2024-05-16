@@ -1,73 +1,84 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
-/*
-"tesk 1"
-[
-  "Task1"(x)
-  
-]
-*/
+const useStorage = () => {
+  const get = () => {
+    const str = localStorage.getItem("TASKS");
+    return str ? JSON.parse(str) : [];
+  };
+
+  const set = (data) => {
+    const str = JSON.stringify(data);
+    localStorage.setItem("TASKS", str);
+  };
+
+  return { get, set };
+};
 
 const TodoList = () => {
-  const [todoItem, setTodoItem] = useState([]);
-  const [text, setText] = useState(); //text = "some value"
-
-  const onTextChange = (e) => {
-    setText(e.target.value);
+  const { get, set } = useStorage();
+  const [item, setItem] = useState(get());
+  const [task, setTask] = useState();
+  const onValueChange = (e) => {
+    setTask(e.target.value);
   };
-  const addTodoButton = () => {
-    if (!text === "") {
-      setTodoItem([
-        ...todoItem,
-        { name: text, isCompleted: false, createdAt: new Date().getTime() },
-      ]);
 
-      setText("");
+  useEffect(() => {}, [set, item]);
+
+  const onClickAddTask = () => {
+    if (task !== "") {
+      setItem([
+        ...item,
+        { name: task, isCompleted: false, isCreated: new Date().getTime() },
+      ]);
+      setTask("");
     }
   };
-  const deleteTodoTask = (index) => {
-    const copyTaskUpdate = todoItem.slice();
+  const onDeleteTask = (index) => {
+    const copyTaskUpdate = item.slice();
     copyTaskUpdate.splice(index, 1);
-    setTodoItem([...copyTaskUpdate]);
+    setItem([...copyTaskUpdate]);
   };
-  const taskCompleted = (e, index) => {
-    const copyTaskUpdate = todoItem.slice();
+  const onValueChecked = (e, index) => {
+    const copyTaskUpdate = item.slice();
     copyTaskUpdate[index].isCompleted = e.target.checked;
-    setTodoItem([...copyTaskUpdate]);
+    setItem([...copyTaskUpdate]);
   };
   return (
     <div className="todoList">
       <h1>TodoList</h1>
-      <input type="text" value={text} onChange={onTextChange} />
-      <button onClick={addTodoButton}>Add Todo</button>
+      <input
+        type="text"
+        placeholder="Add task"
+        onChange={onValueChange}
+        value={task || ""}
+      />
+      <button onClick={onClickAddTask}>Add</button>
       <ul>
-        {todoItem.map((todo, index) => {
+        {item.map((i, index) => {
           return (
             <li key={index}>
               <input
                 type="checkbox"
                 onChange={(e) => {
-                  taskCompleted(e, index);
+                  onValueChecked(e, index);
                 }}
-                checked={todo.isCompleted}
+                checked={i.isCompleted}
               />
-              {todo.name}
+              {i.name}
               <button
                 onClick={() => {
-                  deleteTodoTask(index);
+                  onDeleteTask(index);
                 }}
               >
-                Delete task
+                Delete
               </button>
-              {new Date(todo.createdAt).toLocaleString()}
+              <i>{new Date(i.isCreated).toLocaleString()}</i>
             </li>
           );
         })}
       </ul>
-
-      {/* <pre>{JSON.stringify(todoItem, null, 2)}</pre> */}
+      <pre>{JSON.stringify(item, null, 2)}</pre>
     </div>
   );
 };
-
 export default TodoList;
